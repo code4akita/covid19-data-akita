@@ -1,9 +1,13 @@
 require 'open-uri'
 require 'json'
 require 'nokogiri'
+require 'dotenv'
+require 'aws-sdk'
+
+#==========================================
+# 感染者の概要を取得
 
 url = "https://www.pref.akita.lg.jp/pages/archive/47957"
-
 
 index = nil
 keys = %w(県内症例 陽性確認日 年齢 性別 居住地 職業 濃厚接触者等に関する調査 備考)
@@ -49,6 +53,7 @@ info['感染者の概要']['daily_total'] = Hash[info['感染者の概要']['con
                                         .map{|k,v| [k, v.size]}]
 
 #==========================================
+# 現在の入退院者数等を取得
 
 url = 'https://www.pref.akita.lg.jp/pages/archive/51592'
 
@@ -78,6 +83,7 @@ doc.inner_text.each_line do |l|
 end
 
 #==========================================
+# 検査実施件数の推移を取得
 
 info['検査実施件数の推移'] = {
   'url' => url,
@@ -114,5 +120,19 @@ end
 
 
 #==========================================
+# S3にアップロード
 
-puts JSON.pretty_generate(info)
+Dotenv.load
+
+Aws.config.update(
+  :access_key_id => ENV['AWS_ACCESS_KEY_ID'],
+  :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY'])
+
+s3 = Aws::S3::Resource.new(region: 'us-east-1')
+p ENV['AWS_BUCKET']
+p s3.bucket(ENV['AWS_BUCKET']).exists?
+bucket = s3.bucket(ENV['AWS_BUCKET'])
+o = bucket.object("#{now.year}/#{now.month.to_s.rjust(2,'0')}/#{now.day}.json")
+o.put(body: JSON.pretty_generate(info))
+
+#==========================================
