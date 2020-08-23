@@ -23,7 +23,7 @@ https\://covid19-akita.s3.amazonaws.com/YYYY/MM/DD.json
 
 AWSのS3にファイルをアップロードしますので、S3が使える様に前準備してください。
 
-.envファイルにS3のバケット名とアクセスキーIDとシークレットアクセスキーを設定します。  
+.envファイルにS3のリージョンとバケット名、アクセスキーID、シークレットアクセスキーを設定します。  
 sample.envファイルを参考にしてください。
 
 ```
@@ -34,8 +34,9 @@ $ vi .env
 .env
 
 ```
+AWS_BUCKET_REGION=YOUR_S3_BUCKET_REGION
 AWS_BUCKET=YOUR_S3_BUCKET_NAME
-AWS_ACCESS_KEY_ID=YOUR_AWS_ACCESS_KEY
+AWS_ACCESS_KEY_ID=YOUR_AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY=YOUR_AWS_SECRET_ACCESS_KEY
 ```
 

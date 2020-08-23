@@ -130,7 +130,7 @@ def mkjson
     :access_key_id => ENV['AWS_ACCESS_KEY_ID'],
     :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY'])
 
-  s3 = Aws::S3::Resource.new(region: 'us-east-1')
+  s3 = Aws::S3::Resource.new(region: ENV['AWS_BUCKET_REGION'])
   bucket = s3.bucket(ENV['AWS_BUCKET'])
   o = bucket.object("#{now.year}/#{now.month.to_s.rjust(2,'0')}/#{now.day}.json")
   o.put(body: JSON.pretty_generate(info), content_type:"application/json; charset=utf-8")
