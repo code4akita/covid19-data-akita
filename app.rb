@@ -1,11 +1,13 @@
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
+
 require 'sinatra'
-require './mkjson'
+require 'mkjson'
 
 get '/' do
   'hello'
 end
 
-get '/update' do
+put '/update' do
   mkjson
   'updated'
 end

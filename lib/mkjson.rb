@@ -5,6 +5,7 @@ require 'dotenv'
 require 'aws-sdk'
 
 def mkjson
+
   #==========================================
   # 感染者の概要を取得
 
@@ -130,8 +131,6 @@ def mkjson
     :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY'])
 
   s3 = Aws::S3::Resource.new(region: 'us-east-1')
-  p ENV['AWS_BUCKET']
-  p s3.bucket(ENV['AWS_BUCKET']).exists?
   bucket = s3.bucket(ENV['AWS_BUCKET'])
   o = bucket.object("#{now.year}/#{now.month.to_s.rjust(2,'0')}/#{now.day}.json")
   o.put(body: JSON.pretty_generate(info), content_type:"application/json; charset=utf-8")
