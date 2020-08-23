@@ -38,7 +38,6 @@ doc.inner_text.each_line do |l|
   case key
   when '県内症例'
     e[key] = l.to_i
-    p l if e[key] == 0
   else
     e[key] = l.chomp.gsub(/\r/, "")
   end
@@ -63,19 +62,51 @@ doc = Nokogiri::HTML(URI.open(url))
 
 index = nil
 keys = %w(感染者数累計 入院者数 うち重症者数 宿泊療養者数 退院者・療養解除者数 死亡者数)
-p keys
 doc.inner_text.each_line do |l|
-  #puts l
   case l
   when /死亡者数/
     index = 0
   when /(\d+)人/
     if index
       key = keys[index]
-      #p key
       if key
-        info['現在の入退院者数等']['context'][key] = $1
+        info['現在の入退院者数等']['context'][key] = $1.to_i
         index += 1
+      end
+    end
+  end
+end
+
+#==========================================
+
+info['検査実施件数の推移'] = {
+  'url' => url,
+  'context' => [],
+  'updated_at' => now,
+}
+
+index = nil
+keys = %w(期間 PCR検査実施件数 うち陽性件数)
+doc.search(".c-table--full")[1].inner_text.each_line do |l|
+  l.chomp!
+  case l
+  when ""
+  when /うち陽性件数/
+    index = 0
+  when /合計/
+    index = nil
+  else
+    if index
+      key = keys[index]
+      if key
+        info['検査実施件数の推移']['context'] << {} if index == 0
+        case key
+        when "PCR検査実施件数", "うち陽性件数"
+          info['検査実施件数の推移']['context'].last[key] = l.gsub(/件/, "").to_i
+        else
+          info['検査実施件数の推移']['context'].last[key] = l
+        end
+        index = (index + 1) % 3
       end
     end
   end
