@@ -110,7 +110,7 @@ def mkjson
           info['検査実施件数の推移']['context'] << {} if index == 0
           case key
           when "PCR検査実施件数", "うち陽性件数"
-            info['検査実施件数の推移']['context'].last[key] = l.gsub(/件/, "").to_i
+            info['検査実施件数の推移']['context'].last[key] = l.to_i
           else
             info['検査実施件数の推移']['context'].last[key] = l
           end
