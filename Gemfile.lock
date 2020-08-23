@@ -952,6 +952,7 @@ DEPENDENCIES
   aws-sdk
   dotenv
   nokogiri
+  rack
   sinatra
 
 BUNDLED WITH
