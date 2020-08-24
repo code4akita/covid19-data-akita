@@ -8,16 +8,23 @@
 
 ## データ公開
 
-生成したファイルは次のURLで公開しています。   
+生成した最新のデータは次のURLで公開しています。  
+
+https://covid19-akita.s3.amazonaws.com/current.json  
+
+
+任意の時点のデータを確認したい場合は下のURLで確認できます。  
+
+https\://covid19-akita.s3.amazonaws.com/YYYY/MM/DD.json
+
 YYYYには年が、MMには月が、DDには日が入り、閲覧したい日付に合わせて置き換えてください。  
 月、日が1桁の場合は0を前に足してください。(8 -> 08)
 
-https\://covid19-akita.s3.amazonaws.com/YYYY/MM/DD.json
 
 例:  2020年8月23日
 [https://covid19-akita.s3.amazonaws.com/2020/08/23.json](https://covid19-akita.s3.amazonaws.com/2020/08/23.json)
 
-※) データは2020年8月23日からの公開で以前のデータはありません。
+※) 2020年8月23日からの公開で以前のデータはありません。
 
 ## 使い方
 
