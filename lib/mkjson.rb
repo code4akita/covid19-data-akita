@@ -28,9 +28,10 @@ def mkjson
 
   doc = Nokogiri::HTML(URI.open(url))
   doc.inner_text.each_line do |l|
+    l = l.chomp!
     case l
-    when "\n", "<hr>\n"
-      index = nil
+    when "", "<hr>"
+      next
     when /^\d+例目/
       info['感染者の概要']['context'] << {}
       index = 0
@@ -45,7 +46,7 @@ def mkjson
     when '県内症例'
       e[key] = l.to_i
     else
-      e[key] = l.chomp.gsub(/\r/, "")
+      e[key] = l
     end
     index += 1
   end
