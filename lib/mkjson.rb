@@ -9,7 +9,10 @@ def mkjson
   #==========================================
   # 感染者の概要を取得
 
-  url = "https://www.pref.akita.lg.jp/pages/archive/47957"
+  urls = %w(
+              https://www.pref.akita.lg.jp/pages/archive/53190
+              https://www.pref.akita.lg.jp/pages/archive/47957
+          )
 
   index = nil
   keys = %w(県内症例 陽性確認日 年齢 性別 居住地 職業 濃厚接触者等に関する調査 備考)
@@ -19,36 +22,39 @@ def mkjson
   now = Time.now
 
   info['感染者の概要'] = {
-    'url' => url,
+    'url' => urls.last,
+    'urls' => urls,
     'context' => [],
     'daily_total' => {},
     'updated_at' => now,
   }
 
 
-  doc = Nokogiri::HTML(URI.open(url))
-  doc.inner_text.each_line do |l|
-    l = l.chomp!
-    case l
-    when "", "<hr>"
-      next
-    when /^\d+例目/
-      info['感染者の概要']['context'] << {}
-      index = 0
-    end
-    next unless index
+  urls.each do |url|
+    doc = Nokogiri::HTML(URI.open(url))
+    doc.search(".c-table--full")[0].inner_text.each_line do |l|
+      l = l.chomp!
+      case l
+      when "", "<hr>"
+        next
+      when /^\d+例目/
+        info['感染者の概要']['context'] << {}
+        index = 0
+      end
+      next unless index
 
-    key = keys[index]
-    next unless key
+      key = keys[index]
+      next unless key
 
-    e = info['感染者の概要']['context'].last
-    case key
-    when '県内症例'
-      e[key] = l.to_i
-    else
-      e[key] = l
+      e = info['感染者の概要']['context'].last
+      case key
+      when '県内症例'
+        e[key] = l.to_i
+      else
+        e[key] = l
+      end
+      index += 1
     end
-    index += 1
   end
   info['感染者の概要']['context'].sort!{|a,b| a['県内症例'] <=> b['県内症例']}
   info['感染者の概要']['daily_total'] = Hash[info['感染者の概要']['context']
