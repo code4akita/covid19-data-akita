@@ -61,10 +61,22 @@ def mkjson
       end
     end
   end
+
   info['感染者の概要']['context'].sort!{|a,b| a['県内症例'] <=> b['県内症例']}
+  # 陽性確認日の年を付加
+  year = 2020
+  month = nil
+  info['感染者の概要']['context'].each do |e|
+    m = e['陽性確認日'].scan(/\d+/)[0].to_i
+    year += 1 if month && m < month
+    month = m
+    e['陽性確認日'] = "#{year}年#{e['陽性確認日']}"
+  end
+
   info['感染者の概要']['daily_total'] = Hash[info['感染者の概要']['context']
                                           .group_by{|e| e['陽性確認日']}
                                           .map{|k,v| [k, v.size]}]
+
 
   #==========================================
   # 現在の入退院者数等を取得
@@ -162,6 +174,24 @@ def mkjson
     end
   end
 
+  # 期間の年を付加
+  year = 2020
+  month = nil
+  info['検査実施件数の推移']['context'].reverse.each do |e|
+    a = e['期間'].scan(/[0-9０-９]+/).to_a.map(&:to_i)
+    case a.size
+    when 5, 6
+      a[0] = 2020 + a[0] - 2 if a[0] < 2020   # 令和から西暦に変換
+      a.delete_at(3) if a.size == 6
+    when 4
+      a.unshift year
+    end
+    year += 1 if month && a[1] < month
+    month = a[1]
+    e['期間'] = "#{a[0]}年#{a[1]}月#{a[2]}日～#{a[3]}月#{a[4]}日"
+  end
+
+  
   #==========================================
   # S3にアップロード
 
