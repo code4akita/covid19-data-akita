@@ -10,7 +10,6 @@ def mkjson
   # 感染者の概要を取得
 
   urls = %w(
-              https://www.pref.akita.lg.jp/pages/archive/53190
               https://www.pref.akita.lg.jp/pages/archive/54750
               https://www.pref.akita.lg.jp/pages/archive/47957
           )
