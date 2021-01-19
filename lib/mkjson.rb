@@ -4,6 +4,19 @@ require 'nokogiri'
 require 'dotenv'
 require 'aws-sdk'
 
+# ローカルで確認する場合にtrueにする。
+# その際S3にアップロードしない
+LOCAL_CHECK = false
+
+Dotenv.load
+
+def notify_error error
+  puts error
+  cmd = "curl -X POST -H \"Content-Type: application/json\" -d '{\"value1\":\"#{error}\"}' https://maker.ifttt.com/trigger/COVID19DataAkitaNotification/with/key/#{ENV['IFTTT_WEB_HOOK_KEY']}"
+  puts `#{cmd}`
+end
+
+
 def mkjson
 
   #==========================================
@@ -11,6 +24,7 @@ def mkjson
 
   urls = %w(
               https://www.pref.akita.lg.jp/pages/archive/54750
+              https://www.pref.akita.lg.jp/pages/archive/55157
               https://www.pref.akita.lg.jp/pages/archive/47957
           )
 
@@ -190,7 +204,18 @@ def mkjson
     e['期間'] = "#{a[0]}年#{a[1]}月#{a[2]}日～#{a[3]}月#{a[4]}日"
   end
 
-  
+  # check data
+  a = info['感染者の概要']['context'].map{|e| e["県内症例"]}.sort
+  unless a.max == a.size
+    notify_error "'感染者の概要'の数が合いません"
+    exit 1
+  end
+ 
+  if LOCAL_CHECK
+    puts JSON.pretty_generate(info)
+    exit 1
+  end
+
   #==========================================
   # S3にアップロード
 
