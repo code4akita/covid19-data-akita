@@ -80,10 +80,21 @@ def mkjson
   year = 2020
   month = nil
   info['感染者の概要']['context'].each do |e|
-    m = e['陽性確認日'].scan(/\d+/)[0].to_i
+    a = e['陽性確認日'].scan(/\d+/).map(&:to_i)
+    m, d = begin
+      case a.size
+      when 2
+        a[0, 2]
+      when 3
+        a[1, 2]
+      else
+        [1, 1]
+      end
+    end
+
     year += 1 if month && m < month
     month = m
-    e['陽性確認日'] = "#{year}年#{e['陽性確認日']}"
+    e['陽性確認日'] = "#{year}年#{m}月#{d}日"
   end
 
   info['感染者の概要']['daily_total'] = Hash[info['感染者の概要']['context']
