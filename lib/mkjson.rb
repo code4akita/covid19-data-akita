@@ -12,7 +12,7 @@ Dotenv.load
 
 def notify_error error
   puts error
-  cmd = "curl -X POST -H \"Content-Type: application/json\" -d '{\"value1\":\"#{error}\"}' https://maker.ifttt.com/trigger/COVID19DataAkitaNotification/with/key/#{ENV['IFTTT_WEB_HOOK_KEY']}"
+  cmd = "curl -X POST -H \"Content-Type: application/json\" -d '{\"value1\":\"#{'@' + ENV['TWITTER_ID'] + ' ' || ''}#{error}\"}' https://maker.ifttt.com/trigger/COVID19DataAkitaNotification/with/key/#{ENV['IFTTT_WEB_HOOK_KEY']}"
   puts `#{cmd}`
 end
 
@@ -215,15 +215,21 @@ def mkjson
     e['期間'] = "#{a[0]}年#{a[1]}月#{a[2]}日～#{a[3]}月#{a[4]}日"
   end
 
+  if LOCAL_CHECK
+    puts JSON.pretty_generate(info)
+  end
+
   # check data
   a = info['感染者の概要']['context'].map{|e| e["県内症例"]}.sort
   unless a.max == a.size
-    notify_error "'感染者の概要'の数が合いません"
+    notify_error "'感染者の概要'の数が合いません。"
     exit 1
+  end
+  unless a.size == info["現在の入退院者数等"]["context"]["感染者数累計"]
+    notify_error "'感染者数累計'が合いません。"
   end
  
   if LOCAL_CHECK
-    puts JSON.pretty_generate(info)
     exit 1
   end
 
