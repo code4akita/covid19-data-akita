@@ -27,6 +27,7 @@ def mkjson
   urls = %w(
               https://www.pref.akita.lg.jp/pages/archive/54750
               https://www.pref.akita.lg.jp/pages/archive/55157
+              https://www.pref.akita.lg.jp/pages/archive/56922
               https://www.pref.akita.lg.jp/pages/archive/47957
           )
 
