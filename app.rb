@@ -11,3 +11,8 @@ put '/update' do
   mkjson
   'updated'
 end
+
+put '/notify/test' do
+  notify_error "通知テスト"
+  'notified'
+end
