@@ -1,3 +1,4 @@
+# @see https://devcenter.heroku.com/ja/articles/getting-started-with-rails3
 $:.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 
 require 'rubygems'

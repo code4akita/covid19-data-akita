@@ -9,3 +9,5 @@ gem "aws-sdk"
 gem "dotenv"
 gem "sinatra"
 gem "rack"
+gem 'unicorn'
+gem 'rake'
