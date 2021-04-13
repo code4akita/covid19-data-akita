@@ -14,7 +14,8 @@ def notify_error error
   puts error
   return unless LOCAL_CHECK == false
 
-  cmd = "curl -X POST -H \"Content-Type: application/json\" -d '{\"value1\":\"#{'@' + ENV['TWITTER_ID'] + ' ' || ''}#{error}\"}' https://maker.ifttt.com/trigger/COVID19DataAkitaNotification/with/key/#{ENV['IFTTT_WEB_HOOK_KEY']}"
+  mentions = (ENV['TWITTER_IDS'] || "").split(",").map{|id| "@#{id}"}.join(" ")
+  cmd = "curl -X POST -H \"Content-Type: application/json\" -d '{\"value1\":\"#{mentions} #{error}\"}' https://maker.ifttt.com/trigger/COVID19DataAkitaNotification/with/key/#{ENV['IFTTT_WEB_HOOK_KEY']}"
   puts `#{cmd}`
 end
 
