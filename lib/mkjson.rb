@@ -189,8 +189,8 @@ def mkjson
             a = tr.search("td").map{|e| e.inner_text.gsub(/(\r|\n)/, "")}
             info['検査実施件数の推移']['context'] << {
               "期間" => a[indexes[0]],
-              "PCR検査実施件数" => a[indexes[1]],
-              "うち陽性件数" => a[indexes[2]],
+              "PCR検査実施件数" => a[indexes[1]].scan(/\d/).join('').to_i,
+              "うち陽性件数" => a[indexes[2]].scan(/\d/).join('').to_i,
             }
           end
         end
