@@ -182,7 +182,7 @@ def mkjson
               keys.index("PCR検査実施件数") || keys.index("検査件数（総件数）"),
               keys.index("うち陽性件数")
             ]
-          when /うち陽性件数/, /合計/
+          when /内訳はこちら/, /合計/
             # スキップ
           else
             # データピックアップ
@@ -217,7 +217,7 @@ def mkjson
   end
 
   if LOCAL_CHECK
-    puts JSON.pretty_generate(info)
+  #  puts JSON.pretty_generate(info)
   end
 
   # check data
