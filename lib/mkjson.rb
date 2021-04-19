@@ -3,10 +3,11 @@ require 'json'
 require 'nokogiri'
 require 'dotenv'
 require 'aws-sdk'
+require 'dotenv'
 
 # ローカルで確認する場合にtrueにする。
 # その際S3にアップロードしない
-LOCAL_CHECK = false
+LOCAL_CHECK = true#false
 
 Dotenv.load
 
@@ -165,36 +166,32 @@ def mkjson
   }
   
   index = nil
-  keys = %w(期間 PCR検査実施件数 うち陽性件数)
+  indexes = nil
 
   urls.each do |url|
     doc = Nokogiri::HTML(URI.open(url))
     doc.search(".c-table--full").reverse.each do |div|
       if div.inner_text.include?("検査実施件数の推移")
-        div.inner_text.each_line do |l|
-          l.chomp!
-          case l
-          when ""
-          when /内訳はこちら/ # 別ページに詳細があるので含めない
-            index = nil
-          when /うち陽性件数/
-            index = 0
-          when /合計/
-            index = nil
+        div.search("tr").each do |tr|
+          t = tr.inner_text
+          case t
+          when /期間/
+            keys = tr.search("th").map{|e| e.inner_text.gsub(/(\r|\n)/, "")}
+            indexes = [
+              keys.index("期間"),
+              keys.index("PCR検査実施件数") || keys.index("検査件数（総件数）"),
+              keys.index("うち陽性件数")
+            ]
+          when /うち陽性件数/, /合計/
+            # スキップ
           else
-            if index
-              key = keys[index]
-              if key
-                info['検査実施件数の推移']['context'] << {} if index == 0
-                case key
-                when "PCR検査実施件数", "うち陽性件数"
-                  info['検査実施件数の推移']['context'].last[key] = l.gsub(/,/, '').to_i  # gsubは数値がカンマ区切りなので
-                else
-                  info['検査実施件数の推移']['context'].last[key] = l
-                end
-                index = (index + 1) % 3
-              end
-            end
+            # データピックアップ
+            a = tr.search("td").map{|e| e.inner_text.gsub(/(\r|\n)/, "")}
+            info['検査実施件数の推移']['context'] << {
+              "期間" => a[indexes[0]],
+              "PCR検査実施件数" => a[indexes[1]],
+              "うち陽性件数" => a[indexes[2]],
+            }
           end
         end
         break
@@ -226,13 +223,17 @@ def mkjson
   # check data
   a = info['感染者の概要']['context'].map{|e| e["県内症例"]}.sort
   unless a.max == a.size
-    notify_error "'感染者の概要'の数が合いません。"
+    notify_error "'感染者の概要'の数が合いません。 max: #{a.max}, size: #{a.size}"
     exit 1
   end
-  unless a.size == info["現在の入退院者数等"]["context"]["感染者数累計"]
-    notify_error "'感染者数累計'が合いません。"
+
+  # ENV["SKIP_CHECK_TOTAL_COUNT"]をtrueにするとチェックをスキップできる
+  unless ENV["SKIP_CHECK_TOTAL_COUNT"]
+    unless a.size == info["現在の入退院者数等"]["context"]["感染者数累計"]
+      notify_error "'感染者数累計'が合いません。 概要: #{a.size}件, 累計: #{info["現在の入退院者数等"]["context"]["感染者数累計"]}"
+    end
   end
- 
+  
   if LOCAL_CHECK
     exit 1
   end
