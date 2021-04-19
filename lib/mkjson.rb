@@ -7,7 +7,7 @@ require 'dotenv'
 
 # ローカルで確認する場合にtrueにする。
 # その際S3にアップロードしない
-LOCAL_CHECK = true#false
+LOCAL_CHECK = false
 
 Dotenv.load
 
