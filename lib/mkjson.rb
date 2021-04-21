@@ -26,10 +26,12 @@ def mkjson
   #==========================================
   # 感染者の概要を取得
 
+  # 追加になったページは下から2行目に追加する
   urls = %w(
               https://www.pref.akita.lg.jp/pages/archive/54750
               https://www.pref.akita.lg.jp/pages/archive/55157
               https://www.pref.akita.lg.jp/pages/archive/56922
+              https://www.pref.akita.lg.jp/pages/archive/57229
               https://www.pref.akita.lg.jp/pages/archive/47957
           )
 
@@ -217,7 +219,7 @@ def mkjson
   end
 
   if LOCAL_CHECK
-  #  puts JSON.pretty_generate(info)
+    puts JSON.pretty_generate(info)
   end
 
   # check data
