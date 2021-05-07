@@ -171,7 +171,7 @@ def mkjson
   urls.each do |url|
     doc = Nokogiri::HTML(URI.open(url))
     doc.search(".c-table--full").reverse.each do |div|
-      if div.inner_text.include?("検査実施件数の推移")
+      if div.inner_text.include?("うち陽性件数")
         div.search("tr").each do |tr|
           t = tr.inner_text
           case t
@@ -179,8 +179,8 @@ def mkjson
             keys = tr.search("th").map{|e| e.inner_text.gsub(/(\r|\n)/, "")}
             indexes = [
               keys.index("期間"),
-              keys.index("PCR検査実施件数") || keys.index("検査件数（総件数）"),
-              keys.index("うち陽性件数")
+              keys.index("PCR検査実施件数") || keys.index("検査件数（総件数）（c）"),
+              keys.index("うち陽性件数") || keys.index("うち陽性件数（d）"),
             ]
           when /内訳はこちら/, /合計/
             # スキップ
