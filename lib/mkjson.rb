@@ -28,6 +28,7 @@ def mkjson
 
   # 追加になったページは下から2行目に追加する
   urls = %w(
+              https://www.pref.akita.lg.jp/pages/archive/59331
               https://www.pref.akita.lg.jp/pages/archive/58645
               https://www.pref.akita.lg.jp/pages/archive/57443
               https://www.pref.akita.lg.jp/pages/archive/57444
