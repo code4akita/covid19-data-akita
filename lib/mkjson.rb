@@ -148,7 +148,7 @@ def mkjson
 
         # 人数を記録
         if keys.include?(title)
-          v = values[i].scan(/(\d+)人/).first.first.to_i
+          v = values[i].scan(/(\d+)人?/).first.first.to_i
           info['現在の入退院者数等']['context'][title] = v
         end
 
