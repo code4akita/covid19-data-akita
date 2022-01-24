@@ -231,7 +231,12 @@ def mkjson
   # check data
   a = info['感染者の概要']['context'].map{|e| e["県内症例"]}.sort
   unless a.max == a.size
-    notify_error "'感染者の概要'の数が合いません。 max: #{a.max}, size: #{a.size}"
+    oversight = a.map.with_index{|e, i| [e, e - (a[i - 1] || 0) - 1]}.select{|a| a.last > 0}
+    message = oversight.map{|a| "#{a.first - a.last}から#{a.first - 1}例目の#{a.last}件が抜け落ちています。"}.join("")
+    c = oversight.inject(0){|s, a| s + a.last}
+    message += "概要の数が#{a.max - a.size}件合いません。" if c != a.max - a.size
+    #message += " https://bit.ly/3rEizN6"
+    notify_error message
     exit 1
   end
 
