@@ -236,17 +236,12 @@ def mkjson
     c = oversight.inject(0){|s, a| s + a.last}
     message += "概要の数が#{a.max - a.size}件合いません。" if c != a.max - a.size
     #message += " https://bit.ly/3rEizN6"
+    err = a.max < info['現在の入退院者数等']['context']['感染者数累計']
+    message = (err ? "異常: " : "警告: ") + message
     notify_error message
-    exit 1
+    exit 1 if err
   end
 
-  # ENV["SKIP_CHECK_TOTAL_COUNT"]をtrueにするとチェックをスキップできる
-  unless ENV["SKIP_CHECK_TOTAL_COUNT"]
-    unless a.size == info["現在の入退院者数等"]["context"]["感染者数累計"]
-      notify_error "'感染者数累計'が合いません。 概要: #{a.size}件, 累計: #{info["現在の入退院者数等"]["context"]["感染者数累計"]}"
-    end
-  end
-  
   if LOCAL_CHECK
     exit 1
   end
