@@ -42,6 +42,8 @@ def mkjson
           )
 
   index = nil
+  from = nil
+  to = nil
   keys = %w(県内症例 陽性確認日 年齢 性別 居住地 職業 濃厚接触者等に関する調査 備考)
 
   info = {}
@@ -67,7 +69,16 @@ def mkjson
           when "", "<hr>"
             next
           when /^\d+例目/
+            # from例目からto例目までの形式の場合、件数分のコピーを作る
+            if to
+              ((from.to_i + 1)..to.to_i).each do |i|
+                h = info['感染者の概要']['context'].last.dup
+                h['県内症例'] = i
+                info['感染者の概要']['context'] << h
+              end
+            end
             info['感染者の概要']['context'] << {}
+            from, to = l.scan(/\d+/)
             index = 0
           end
           next unless index
