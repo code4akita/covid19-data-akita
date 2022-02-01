@@ -28,16 +28,19 @@ def mkjson
 
   # 追加になったページは下から2行目に追加する
   urls = %w(
-              https://www.pref.akita.lg.jp/pages/archive/62329
-              https://www.pref.akita.lg.jp/pages/archive/60766
-              https://www.pref.akita.lg.jp/pages/archive/60163
-              https://www.pref.akita.lg.jp/pages/archive/59894
-              https://www.pref.akita.lg.jp/pages/archive/59729
-              https://www.pref.akita.lg.jp/pages/archive/59331
-              https://www.pref.akita.lg.jp/pages/archive/58645
               https://www.pref.akita.lg.jp/pages/archive/57443
               https://www.pref.akita.lg.jp/pages/archive/57444
               https://www.pref.akita.lg.jp/pages/archive/57552
+              https://www.pref.akita.lg.jp/pages/archive/58645
+              https://www.pref.akita.lg.jp/pages/archive/59331
+              https://www.pref.akita.lg.jp/pages/archive/59729
+              https://www.pref.akita.lg.jp/pages/archive/59894
+              https://www.pref.akita.lg.jp/pages/archive/60163
+              https://www.pref.akita.lg.jp/pages/archive/60766
+              https://www.pref.akita.lg.jp/pages/archive/62329
+              https://www.pref.akita.lg.jp/pages/archive/62530
+              https://www.pref.akita.lg.jp/pages/archive/62540
+              
               https://www.pref.akita.lg.jp/pages/archive/47957
           )
 
