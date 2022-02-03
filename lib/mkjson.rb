@@ -72,17 +72,17 @@ def mkjson
           case l
           when "", "<hr>"
             next
-          when /^\d+例\s*目/
+          when /^.?\d+例\s*目/
             # from例目からto例目までの形式の場合、件数分のコピーを作る
             if to
-              ((from.to_i + 1)..to.to_i).each do |i|
+              ((from + 1)..to).each do |i|
                 h = info['感染者の概要']['context'].last.dup
                 h['県内症例'] = i
                 info['感染者の概要']['context'] << h
               end
             end
             info['感染者の概要']['context'] << {}
-            from, to = l.scan(/\d+/)
+            from, to = l.scan(/\d+/).map(&:to_i)
             index = 0
           end
           next unless index
@@ -107,17 +107,17 @@ def mkjson
   # 陽性確認日の年を付加
   year = 2020
   month = nil
+  md = [1,1]
   info['感染者の概要']['context'].each do |e|
-    a = e['陽性確認日'].scan(/\d+/).map(&:to_i)
+    a = (e['陽性確認日'] || "").scan(/\d+/).map(&:to_i)
     m, d = begin
       case a.size
       when 2
-        a[0, 2]
+        md = a[0, 2]
       when 3
-        a[1, 2]
-      else
-        [1, 1]
+        md = a[1, 2]
       end
+      md
     end
 
     year += 1 if month && m < month
@@ -249,7 +249,7 @@ def mkjson
     oversight = a.map.with_index{|e, i| [e, e - (a[i - 1] || 0) - 1]}.select{|a| a.last > 0}
     message = oversight.map{|a| "#{a.first - a.last}から#{a.first - 1}例目の#{a.last}件が抜け落ちています。"}.join("")
     c = oversight.inject(0){|s, a| s + a.last}
-    message += "概要の数が#{a.max - a.size}件合いません。" if c != a.max - a.size
+    message += "概要の数が#{(a.max - a.size).abs}件合いません。" if c != a.max - a.size
     #message += " https://bit.ly/3rEizN6"
     err = a.max < info['現在の入退院者数等']['context']['感染者数累計']
     message = (err ? "異常: " : "警告: ") + message
