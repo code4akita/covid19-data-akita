@@ -28,20 +28,20 @@ def mkjson
 
   # 追加になったページは下から2行目に追加する
   urls = %w(
-    https://www.pref.akita.lg.jp/pages/archive/62540
-    https://www.pref.akita.lg.jp/pages/archive/62530
-    https://www.pref.akita.lg.jp/pages/archive/62329
-    https://www.pref.akita.lg.jp/pages/archive/60766
-    https://www.pref.akita.lg.jp/pages/archive/60163
-    https://www.pref.akita.lg.jp/pages/archive/59894
-    https://www.pref.akita.lg.jp/pages/archive/59729
-    https://www.pref.akita.lg.jp/pages/archive/59331
-    https://www.pref.akita.lg.jp/pages/archive/58645
-    https://www.pref.akita.lg.jp/pages/archive/57552
-    https://www.pref.akita.lg.jp/pages/archive/57444
     https://www.pref.akita.lg.jp/pages/archive/57443
-  
-              
+    https://www.pref.akita.lg.jp/pages/archive/57444
+    https://www.pref.akita.lg.jp/pages/archive/57552
+    https://www.pref.akita.lg.jp/pages/archive/58645
+    https://www.pref.akita.lg.jp/pages/archive/59331
+    https://www.pref.akita.lg.jp/pages/archive/59729
+    https://www.pref.akita.lg.jp/pages/archive/59894
+    https://www.pref.akita.lg.jp/pages/archive/60163
+    https://www.pref.akita.lg.jp/pages/archive/60766
+    https://www.pref.akita.lg.jp/pages/archive/62329
+    https://www.pref.akita.lg.jp/pages/archive/62530
+    https://www.pref.akita.lg.jp/pages/archive/62540
+    https://www.pref.akita.lg.jp/pages/archive/62645
+
     https://www.pref.akita.lg.jp/pages/archive/47957
   )
 
@@ -93,7 +93,7 @@ def mkjson
           e = info['感染者の概要']['context'].last
           case key
           when '県内症例'
-            e[key] = l.to_i
+            e[key] = (l.scan(/\d+/).first || 0).to_i
           else
             e[key] = l
           end
@@ -244,7 +244,7 @@ def mkjson
   end
 
   # check data
-  a = info['感染者の概要']['context'].map{|e| e["県内症例"]}.sort
+  a = info['感染者の概要']['context'].map{|e| e["県内症例"]}.sort.uniq
   unless a.max == a.size
     oversight = a.map.with_index{|e, i| [e, e - (a[i - 1] || 0) - 1]}.select{|a| a.last > 0}
     message = oversight.map{|a| "#{a.first - a.last}から#{a.first - 1}例目の#{a.last}件が抜け落ちています。"}.join("")
