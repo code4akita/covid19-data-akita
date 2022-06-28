@@ -11,3 +11,5 @@ gem "sinatra"
 gem "rack"
 gem 'unicorn'
 gem 'rake'
+
+ruby "3.1.1"
