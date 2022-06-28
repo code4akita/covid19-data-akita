@@ -1258,6 +1258,8 @@ GEM
       ruby2_keywords (~> 0.0.1)
     nokogiri (1.13.6-x86_64-darwin)
       racc (~> 1.4)
+    nokogiri (1.13.6-x86_64-linux)
+      racc (~> 1.4)
     racc (1.6.0)
     rack (2.2.3.1)
     rack-protection (2.2.0)
@@ -1277,6 +1279,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-21
+  x86_64-linux
 
 DEPENDENCIES
   aws-sdk
