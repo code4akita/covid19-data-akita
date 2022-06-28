@@ -228,9 +228,16 @@ def mkjson
   info['検査実施件数の推移']['context'].reverse.each do |e|
     a = e['期間'].scan(/[0-9０-９]+/).to_a.map(&:to_i)
     case a.size
-    when 5, 6
+    when 5
+      if /^令和/ =~ e['期間']
+        a[0] = 2020 + a[0] - 2 if a[0] < 2020   # 令和から西暦に変換
+      else
+        a.delete_at(2)
+        a.unshift year
+      end
+    when 6
       a[0] = 2020 + a[0] - 2 if a[0] < 2020   # 令和から西暦に変換
-      a.delete_at(3) if a.size == 6
+      a.delete_at(3)
     when 4
       a.unshift year
     end
