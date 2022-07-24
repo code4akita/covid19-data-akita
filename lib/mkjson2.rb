@@ -4,7 +4,7 @@ require 'nokogiri'
 require 'dotenv'
 require 'aws-sdk'
 require 'rubyXL'
-
+require 'time'
 
 Dotenv.load
 
@@ -19,10 +19,14 @@ end
 
 def load_data path
   local_path = File.join("/tmp", File.basename(path))
+  # ダウンロード済みの同じファイル名があれば更新しないようにしようとしたが、
+  # 同じファイル名で更新される場合があるかもしれないので止める
+  # return nil if File.exist? local_path
+
   `curl #{SERVER}#{path} -o #{local_path}` unless File.exist? local_path
   book = RubyXL::Parser.parse local_path
   sheet = book.worksheets.first
-  h = {}
+  h = { data: {} }
   headers = nil
   sheet.each_with_index do |row, i|
     values = row.cells.map{ |cell| cell.value }
@@ -35,9 +39,10 @@ def load_data path
         next if k == "公表日"
         h2[k] = values[i]
       end
-      h[values[headers["公表日"]].new_offset('+09:00') - Rational("9/24")] = h2
+      h[:data][values[headers["公表日"]].new_offset('+09:00') - Rational("9/24")] = h2
     end
   end
+  h[:updated_at] = Time.now.iso8601
   h
 end
 
@@ -46,10 +51,10 @@ def load_and_store_all_data paths
     case path
     when /保健所別/
       h = load_data path
-      stoe_to_s3("akita_covid19_by_health_center.json", h)
+      stoe_to_s3("akita_covid19_by_health_center.json", h) if h
     when /年代別/
       h = load_data path
-      stoe_to_s3("akita_covid19_by_age.json", h)
+      stoe_to_s3("akita_covid19_by_age.json", h) if h
     end
   end
 end
@@ -73,4 +78,6 @@ def mkjson_from_excel
   load_and_store_all_data paths
 end
 
-mkjson_from_excel
+if $0 == __FILE__
+  mkjson_from_excel
+end
