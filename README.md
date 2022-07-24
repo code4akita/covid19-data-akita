@@ -5,6 +5,10 @@
 - [新型コロナウイルス感染症に係る入退院者数・検査実施件数等](https://www.pref.akita.lg.jp/pages/archive/51592)
 - [新型コロナウイルス感染者関連の情報について](https://www.pref.akita.lg.jp/pages/archive/47957)
 
+新たにExcelファイルとしてデータ公開されていますので、それからJSONファイルに変換するのを追加しました。(2022/07/25)
+
+[新型コロナウイルス感染状況関連データについて](https://www.pref.akita.lg.jp/pages/archive/66888)
+
 
 ## データ公開
 
@@ -25,6 +29,18 @@ YYYYには年が、MMには月が、DDには日が入り、閲覧したい日付
 [https://covid19-akita.s3.amazonaws.com/2020/08/23.json](https://covid19-akita.s3.amazonaws.com/2020/08/23.json)
 
 ※) 2020年8月23日からの公開で以前のデータはありません。
+
+
+### ExcelファイルからJSONに変換したデータは次のURLで公開しています。
+
+#### 保健所別感染者数
+
+[https://covid19-akita.s3.amazonaws.com/akita_covid19_by_health_center.json](https://covid19-akita.s3.amazonaws.com/akita_covid19_by_health_center.json)
+
+#### 年代別感染者数
+
+[https://covid19-akita.s3.amazonaws.com/akita_covid19_by_age.json](https://covid19-akita.s3.amazonaws.com/akita_covid19_by_age.json)
+
 
 ## 使い方
 

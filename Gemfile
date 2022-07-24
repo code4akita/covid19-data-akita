@@ -11,5 +11,6 @@ gem "sinatra"
 gem "rack"
 gem 'unicorn'
 gem 'rake'
+gem 'rubyXL'
 
 ruby "3.1.1"
