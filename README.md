@@ -5,9 +5,9 @@
 - [新型コロナウイルス感染症に係る入退院者数・検査実施件数等](https://www.pref.akita.lg.jp/pages/archive/51592)
 - [新型コロナウイルス感染者関連の情報について](https://www.pref.akita.lg.jp/pages/archive/47957)
 
-新たにExcelファイルとしてデータ公開されていますので、それからJSONファイルに変換するのを追加しました。(2022/07/25)
+新たにExcelファイルとしてデータが公開されていますので、ExcelファイルからJSONファイルに変換するのを追加しました。(2022/07/25)
 
-[新型コロナウイルス感染状況関連データについて](https://www.pref.akita.lg.jp/pages/archive/66888)
+- [新型コロナウイルス感染状況関連データについて](https://www.pref.akita.lg.jp/pages/archive/66888)
 
 
 ## データ公開
