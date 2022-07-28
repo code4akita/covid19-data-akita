@@ -2,12 +2,14 @@ $:.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 
 require 'sinatra'
 require 'mkjson'
+require 'mkjson2'
 
 get '/' do
   'hello'
 end
 
 put '/update' do
+  mkjson_from_excel
   mkjson
   'updated'
 end
