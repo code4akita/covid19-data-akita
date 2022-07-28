@@ -1,0 +1,28 @@
+name: Data updater
+
+on:
+  schedule:
+    - cron: '30 11 * * *'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  job:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out master branch
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.1
+
+      # Update data.json
+      - name: Update data
+        run: |
+          bundle
+          rake update:json
