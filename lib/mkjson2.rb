@@ -29,7 +29,7 @@ def load_data path
   h = { data: {} }
   headers = nil
   sheet.each_with_index do |row, i|
-    values = row.cells.map{ |cell| cell.value }
+    values = row.cells.map{ |cell| cell ? cell.value : nil }
     case i
     when 0
       headers = Hash[values.zip((0...values.size).to_a)]
